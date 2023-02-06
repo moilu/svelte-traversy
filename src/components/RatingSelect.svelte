@@ -5,8 +5,8 @@
     const dispatchEvent = createEventDispatcher();
 
     function onChange(event) {
-       selected = event.currentTarget.value;
-       dispatchEvent('rating-select', selected);
+      selected = event.target.value;
+      dispatchEvent('rating-select', selected);
     }
 </script>
 

@@ -1,16 +1,18 @@
 <script lang="ts">
     import { v4 as uuidv4 } from 'uuid';
+    import type { Feedback } from '../interfaces/Feedback';
+    import { FeedbackStore } from '../stores';
     import Button from "./Button.svelte";
     import Card from "./Card.svelte";
     import RatingSelect from "./RatingSelect.svelte";
 
     let rating: number = 10;
-    let text: any;
+    let text: string = '';
     let btnDisabled: boolean = true;
     let min: number = 10;
     let message: string | null;
 
-    const handleInput = (text): void => {
+    const handleInput = (): void => {
         if(text.length <= min) {
             message = `El mensaje debe ser de al menos ${min} caracteres.`;
             btnDisabled = true;
@@ -20,16 +22,19 @@
         }
     }
 
-    const handleSelect = (event) => rating = event.detail;
+    const handleSelect = (event: CustomEvent): void => rating = event.detail;
 
-    const handleSubmit = () => {
-        if (text.lenght >= min) {
-            const newFeedback = {
-                id: uuidv4(),
-                text,
-                rating: +rating
-            }
-            console.log(newFeedback);
+    const handleSubmit = (): void => {
+        if (text.length >= min) {
+          const newFeedback: Feedback = {
+              id: uuidv4(),
+              text,
+              rating: +rating
+          }
+          FeedbackStore.update((currentFeedback)=> {
+            return [newFeedback, ...currentFeedback];
+          });
+          text = '';
         }
     }
 
